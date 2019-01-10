@@ -84,7 +84,7 @@ def post_new(request):
             return redirect('index')
     else:
         form = PostForm()
-    return render(request, 'post_edit.html', {'form_post': form})
+    return render(request, 'index.html', {'form': form})
 
 
 class PesquisarPerfilView(View):

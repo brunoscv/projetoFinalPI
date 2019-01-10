@@ -82,9 +82,7 @@
                                 <a href = "{% url 'exibir' perfil.id %}">
                                     {{ perfil }}
                                 </a>
-                                <a href = "{% url 'desfazer' perfil.id %}">
-                                    X
-                              </a>
+                                <a class="btn btn-warning" href = "{% url 'desfazer' perfil.id %}">Desfazer amizade</a>
                             </li>
                         {% endfor %}
                     </ul>
@@ -109,16 +107,16 @@
                         {% for convite in perfil_logado.convites_recebidos.all %}
                             <li class = "list-group-item">
                                <ul class = "list-inline">
-                                    <li class = "list-inline-item">
+                                    <li class = "list-inline-item" style="padding:0.6em">
                                         <a href = "{% url 'exibir' convite.solicitante.id %}">
                                             {{convite.solicitante.nome}}
                                         </a>
                                     </li>
                                     <li class = "list-inline-item pull-right">
-                                        <a href = "{% url 'recusar' convite.id %}">recusar</a>
+                                        <a class="btn btn-danger" href="{% url 'recusar' convite.id %}">recusar</a>
                                     </li>
                                     <li class = "list-inline-item pull-right">
-                                        <a href = "{% url 'aceitar' convite.id %}">aceitar</a>
+                                        <a class="btn btn-success" href = "{% url 'aceitar' convite.id %}">aceitar</a>
                                     </li>
                                 </ul>
                             </li>
@@ -154,8 +152,9 @@
               </div>
               <div class="modal-body">
 
-                <form method="POST" class="post-form">{% csrf_token %}
-                    {{ form_post.as_p }}
+                <form method="POST" class="post-form">
+                    {% csrf_token %}
+                    {{ form.as_p }}
                     <button type="submit" class="save btn btn-default">Save</button>
                 </form>
 
