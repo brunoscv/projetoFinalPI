@@ -15,9 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
+from django.contrib.auth.views import PasswordResetView, PasswordResetCompleteView, PasswordResetConfirmView, \
+    PasswordResetDoneView
 
 from django.urls import path, include
 from perfis import views
+from usuarios.views import*
+
 from usuarios.views import RegistrarUsuarioView
 
 urlpatterns = [
@@ -34,7 +38,17 @@ urlpatterns = [
     path('mudar-senha/', views.mudar_senha, name="mudar_senha"),
     path('timeline/', include('timeline.urls'), name="timeline"),
     path('perfil/<int:perfil_id>/super', views.definirSuperUser, name='super'),
+    path('perfil/post_new', views.post_new, name='post_new'),
     path('perfil/pesquisar', views.PesquisarPerfilView.as_view(), name='pesquisar'),
+    path('password_reset/$', PasswordResetView.as_view(template_name='reset_form.html'),
+         name='password_reset'),
+    path('password_reset/done/', PasswordResetDoneView.as_view(template_name='reset_email.html'),
+         name='password_reset_done'),
+    path('reset/<uidb64>/<token>/',
+         PasswordResetConfirmView.as_view(template_name='reset_confirm.html'),
+         name='password_reset_confirm'),
+    path('reset/done/$', PasswordResetCompleteView.as_view(template_name='reset_password.html'),
+         name='password_reset_complete'),
 ]
 
 

@@ -5,13 +5,12 @@ from django.shortcuts import redirect
 from django.views.generic.base import View
 from usuarios.forms import MudarSenhaForm
 from timeline.models import Post
-
-from perfis.forms import PesquisaUsuarioForm
-
+from django.utils import timezone
+from perfis.forms import PesquisaUsuarioForm, PostForm
 
 @login_required
 def index(request):
-	posts = Post.objects.all()
+	posts = Post.objects.all().order_by('-created_date')
 	return render(request, 'index.html',{'perfis' : Perfil.objects.all(),
 										 'perfil_logado' : get_perfil_logado(request),
 										 'posts': posts})
@@ -73,6 +72,19 @@ def mudar_senha(request):
 			request.user.save()
 		return redirect('index')
 	return render(request, 'mudar_senha.html', {'form':form})
+
+def post_new(request):
+    if request.method == "POST":
+        form = PostForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user
+            post.published_date = timezone.now()
+            post.save()
+            return redirect('index')
+    else:
+        form = PostForm()
+    return render(request, 'post_edit.html', {'form_post': form})
 
 
 class PesquisarPerfilView(View):
