@@ -1,9 +1,23 @@
 @CHARSET "UTF-8";
 
+.avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    -moz-force-broken-image-icon: 1;
+    float:left;
+}
+
+
+.post{
+    padding: 1em 0;
+    border-bottom: 1px #f5f5f5 solid;
+    margin-bottom: 1em;
+}
 /* Space out content a bit */
 body {
   padding-top: 20px;
-  padding-bottom: 20px;
+  padding-bottom: 0px;
 }
 
 .header,
@@ -48,9 +62,9 @@ body {
   padding: 14px 24px;
 }
 
-.content {
+/*.content {
   margin: 40px 0;
-}
+} */
 .content p + h4 {
   margin-top: 28px;
 }
