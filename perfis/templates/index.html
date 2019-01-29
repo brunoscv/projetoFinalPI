@@ -1,144 +1,149 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 {% block body %}
-    <aside class="col-md-3">
-        <div class="col-lg-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <strong>Todos os perfis</strong>
-            </div>
-            {% if perfis %}
-            <ul class="list-group">
-                {% for perfil in perfis %}
-                    <li class="list-group-item">
-                        <a href = "{% url 'exibir' perfil.id %}">	{{ perfil.nome }} / {{ perfil.email }}
-                        </a>
-                    </li>
-                {% endfor %}
-            {% else %}
-                <p>Não há perfis cadastrados</p>
-            {% endif %}
-            </ul>
-        </div>
-    </div>
-    </aside>
-    <div class="col-md-6">
-        <div class="col-lg-12">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <strong>Buscar Usuário</strong>
-                </div>
-                <div class="panel-body">
-                   <form class = "form-signin"  method="post"
-                    action="{% url 'pesquisar' %}">
-                    {% csrf_token %}
-                       <div class="form-group">
-                            <div class="col-sm-10">
-                                <input name="nome" id="nome_id" required="required" class="form-control" placeholder="Pesquisar usuário">
-
-                            </div>
-                            <button class="btn btn-primary pull-right" type="submit"><i class="fa fa-search"></i> </button>
-                       </div>
-                    </form>
+    <div class="container">
+        <aside class="col-md-3">
+            <div class="col-lg-12" style="padding:0">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <strong>Todos os perfis</strong>
+                    </div>
+                     <div class="panel-body">
+                        {% if perfis %}
+                        <ul class="list-group">
+                            {% for perfil in perfis %}
+                                <li class="list-group-item">
+                                    <a href = "{% url 'exibir' perfil.id %}">	{{ perfil.nome }} / {{ perfil.email }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        {% else %}
+                            <p>Não há perfis cadastrados</p>
+                        {% endif %}
+                        </ul>
+                     </div>
                 </div>
             </div>
-        </div>
-
-        <div class="col-lg-12">
-            <div class="panel panel-default">
-                <div class="panel-heading"> <strong>Timeline</strong><button id="modal" class="btn btn-primary pull-right" type="button" style="padding: 0 6px;"><i class="fa fa-plus"></i></button></div>
-                <div class="panel-body">
-                    {% for post in posts %}
-                    <div class="post">
-                        <img class="avatar js-action-profile-avatar" src="{% static 'img/photo.jpg' %}" alt="">
-                            <div class="content" style="margin-left:5em">
-                                <div class="info_perfil">
-                                    <span>{{ post.created_date}}</span>
+        </aside>
+        <div class="col-md-6" style="padding:0">
+            <div class="col-lg-12" style="padding:0">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <strong>Buscar Usuário</strong>
+                    </div>
+                    <div class="panel-body">
+                       <form class = "form-signin"  method="post"
+                        action="{% url 'pesquisar' %}">
+                        {% csrf_token %}
+                           <div class="form-group">
+                                <div class="col-sm-10">
+                                    <input name="nome" id="nome_id" required="required" class="form-control" placeholder="Pesquisar usuário">
 
                                 </div>
-                                <div class="info_post">
-                                    <span>{{post.text}}</span>
+                                <button class="btn btn-primary pull-right" type="submit"><i class="fa fa-search"></i> </button>
+                           </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-12" style="padding:0">
+                <div class="panel panel-default">
+                    <div class="panel-heading"> <strong>Timeline</strong><button id="modal" class="btn btn-primary pull-right" type="button" style="padding: 0 6px;"><i class="fa fa-plus"></i></button></div>
+                    <div class="panel-body">
+                        {% for post in posts %}
+                        <div class="post">
+                            <img class="avatar js-action-profile-avatar" src="{% static 'img/photo.jpg' %}" alt="">
+                                <div class="content" style="margin-left:5em">
+                                    <div class="info_perfil">
+                                        <span>{{ post.created_date}}</span>
+
+                                    </div>
+                                    <div class="info_post">
+                                        <span>{{post.text}}</span>
+                                    </div>
                                 </div>
-                            </div>
 
+                        </div>
+                        {% endfor %}
                     </div>
-                    {% endfor %}
                 </div>
             </div>
-    </div></div>
-    <aside class="col-md-3">
-        <div class="col-lg-12">
-        <div class="panel panel-default">
-            {% with total=perfil_logado.contatos.count %}
-                {% if total %}
-                    <div class="panel-heading">
-                        <strong> {{ total }}
-                            Contato{{ total|pluralize }}
-                        </strong>
-                    </div>
-                    <ul class="list-group">
-                        {% for perfil in perfil_logado.contatos.all %}
-                            <li class = "list-group-item">
-                                <a href = "{% url 'exibir' perfil.id %}">
-                                    {{ perfil }}
-                                </a>
-                                <a class="btn btn-warning" href = "{% url 'desfazer' perfil.id %}">Desfazer amizade</a>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                {% else %}
-                    <div class="panel-body">
-                        Não há contatos :(
-                    </div>
-                {% endif %}
-            {% endwith %}
         </div>
-    </div>
-    <div class="col-lg-12">
-        <div class="panel panel-default">
-            {% with total=perfil_logado.convites_recebidos.count %}
-
-                {% if total %}
-                    <div class="panel-heading">
-                        <strong> {{ total }}
-                        Convite{{ total|pluralize }} aguardando aprovação</strong>
-                    </div>
-                    <ul class="list-group">
-                        {% for convite in perfil_logado.convites_recebidos.all %}
-                            <li class = "list-group-item">
-                               <ul class = "list-inline">
-                                    <li class = "list-inline-item" style="padding:0.6em">
-                                        <a href = "{% url 'exibir' convite.solicitante.id %}">
-                                            {{convite.solicitante.nome}}
-                                        </a>
-                                    </li>
-                                    <li class = "list-inline-item pull-right">
-                                        <a class="btn btn-danger" href="{% url 'recusar' convite.id %}">recusar</a>
-                                    </li>
-                                    <li class = "list-inline-item pull-right">
-                                        <a class="btn btn-success" href = "{% url 'aceitar' convite.id %}">aceitar</a>
-                                    </li>
-                                </ul>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                {% else %}
-                    <div class="panel-body">
-                        Não há convites
-                    </div>
-                {% endif %}
-            {% endwith %}
-        </div>
-    </div>
-        <div class="col-lg-12">
+        <aside class="col-md-3">
+            <div class="col-lg-12" style="padding:0">
             <div class="panel panel-default">
-                <div class="panel-heading"> Configurações</div>
-                <div class="panel-body">
-                    <p><a href = "{% url 'mudar_senha' %}">Alterar Senha</a></p>
-                </div>
+                {% with total=perfil_logado.contatos.count %}
+                    {% if total %}
+                        <div class="panel-heading">
+                            <strong> {{ total }}
+                                Contato{{ total|pluralize }}
+                            </strong>
+                        </div>
+                        <ul class="list-group">
+                            {% for perfil in perfil_logado.contatos.all %}
+                                <li class = "list-group-item">
+                                    <a href = "{% url 'exibir' perfil.id %}">
+                                        {{ perfil }}
+                                    </a>
+                                    <a class="btn btn-warning" href = "{% url 'desfazer' perfil.id %}">Desfazer amizade</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <div class="panel-body">
+                            Não há contatos :(
+                        </div>
+                    {% endif %}
+                {% endwith %}
             </div>
         </div>
-    </aside>
+        <div class="col-lg-12" style="padding:0">
+            <div class="panel panel-default">
+                {% with total=perfil_logado.convites_recebidos.count %}
+
+                    {% if total %}
+                        <div class="panel-heading">
+                            <strong> {{ total }}
+                            Convite{{ total|pluralize }} aguardando aprovação</strong>
+                        </div>
+                        <ul class="list-group">
+                            {% for convite in perfil_logado.convites_recebidos.all %}
+                                <li class = "list-group-item">
+                                   <ul class = "list-inline">
+                                        <li class = "list-inline-item" style="padding:0.6em">
+                                            <a href = "{% url 'exibir' convite.solicitante.id %}">
+                                                {{convite.solicitante.nome}}
+                                            </a>
+                                        </li>
+                                        <li class = "list-inline-item pull-right">
+                                            <a class="btn btn-danger" href="{% url 'recusar' convite.id %}">recusar</a>
+                                        </li>
+                                        <li class = "list-inline-item pull-right">
+                                            <a class="btn btn-success" href = "{% url 'aceitar' convite.id %}">aceitar</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <div class="panel-body">
+                            Não há convites
+                        </div>
+                    {% endif %}
+                {% endwith %}
+            </div>
+        </div>
+            <div class="col-lg-12" style="padding:0">
+                <div class="panel panel-default">
+                    <div class="panel-heading"> Configurações</div>
+                    <div class="panel-body">
+                        <p><a href = "{% url 'mudar_senha' %}">Alterar Senha</a></p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
 
     <!-- MODAL PARA ADICIONAR POST NA TIME LINE -->
         <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -174,5 +179,7 @@
             });
         });
     </script>
+    </div>
+
 
 {% endblock %}
